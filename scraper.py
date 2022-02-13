@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from parameters import locations_url
+from parameters import locations_url, price_weight, area_weight, year_weight, vastike_weight, floor_weight, rooms_weight
 
 # Import Apartment object
 from apartment import Apartment, Apartments, Price, Area, Year, Vastike, Floor, Rooms, Zone
@@ -59,7 +59,7 @@ for url_number, url in enumerate(apartment_urls):
                 price = a.find('dd', attrs={'class': 'info-table__value'}).text
                 price = price.replace("€", "")
                 price = price.replace("\xa0", "")
-                price=price.replace(",", ".")
+                price = price.replace(",", ".")
                 price.strip()
                 price = float(price)
 
@@ -82,7 +82,7 @@ for url_number, url in enumerate(apartment_urls):
                 # Get zone
                 zone = a.find('dd', attrs={'class': 'info-table__value'}).text
                 zone = zone.replace("\xa0", "")
-                zone=zone.strip()
+                zone = zone.strip()
 
             if a.find('dt', attrs={'class': 'info-table__title'}).text == "Kerros":
                 # Get floor
@@ -123,8 +123,8 @@ for url_number, url in enumerate(apartment_urls):
     except Exception as e:
         print(e)
     try:
-        appartment = Apartment(name=address, price=Price(price), area=Area(area), year=Year(
-            year), vastike=Vastike(vastike), floor=Floor(floor), rooms=Rooms(rooms), zone=Zone(zone), url=url)
+        appartment = Apartment(name=address, price=Price(price, price_weight), area=Area(area, area_weight), year=Year(
+            year, year_weight), vastike=Vastike(vastike, vastike_weight), floor=Floor(floor, floor_weight), rooms=Rooms(rooms, rooms_weight), zone=Zone(zone), url=url)
         apartment_list.append(appartment)
     except Exception as e:
         print("Will not create apartment: ", address, " due to exception : ", e)

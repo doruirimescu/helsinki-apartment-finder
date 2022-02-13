@@ -1,5 +1,5 @@
 '''
-    Parameters used for your apartment search.
+    Parameters used to configure your apartment search.
     vastike is hoitovastike
     price is velaton
 '''
@@ -17,6 +17,13 @@ zone_range      = (0, 1)
 
 # Assign your weights from 0 to 1 (check zone_range) for the zones that you value the most
 zone_weights = {"matinkylä": 1, "leppävaara": 1, "tiistilä": 1, "olari": 0.5}
+
+price_weight = 1.0
+area_weight  = 1.0
+year_weight  = 1.0
+vastike_weight = 1.0
+floor_weight = 1.0
+rooms_weight = 1.0
 
 number_of_apartments_to_plot = 5
 number_of_apartments_to_rank = 10
