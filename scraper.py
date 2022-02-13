@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import time
 import matplotlib.pyplot as plt
+from parameters import locations_url
 
 # Import Apartment object
 from apartment import Apartment, Apartments, Price, Area, Year, Vastike, Floor, Rooms, Zone
@@ -14,16 +15,6 @@ driver = webdriver.Chrome("/usr/lib/chromium-browser/chromedriver")
 # Loop to loop through all pages
 # Scrape first the number of pages (in progress)
 url_list = []
-locations = '''&locations=%5B%5B814,4, \
-%22Lepp%C3%A4vaara,%20Espoo%22%5D,%5B798,4, \
-%22Matinkyl%C3%A4,%20Espoo%22%5D,%5B335047,4, \
-%22Tiistil%C3%A4,%20Espoo%22%5D,%5B797,4, \
-%22Olari,%20Espoo%22%5D,%5B815,4, \
-%22Kilo,%20Espoo%22%5D,%5B5694675,4, \
-%22Finnoo,%20Espoo%22%5D,%5B13736198,4, \
-%22Vermonniitty,%20Espoo%22%5D,%5B13617407,3, \
-%22Peril%C3%A4nniitty,%20Espoo%22%5D,%5B880,4, \
-%22M%C3%A4kkyl%C3%A4,%20Espoo%22%5D%5D'''
 
 n_pages = 1
 SLEEP_TIME_S = 0
@@ -32,7 +23,7 @@ for p in range(1, n_pages + 1):
     url_01 = "https://asunnot.oikotie.fi/myytavat-asunnot?pagination="
     url_02 = str(p)
     url_03 = "&cardType=100"
-    url_list.append(url_01 + url_02 + locations + url_03)
+    url_list.append(url_01 + url_02 + locations_url + url_03)
 
 
 apartment_urls = []
