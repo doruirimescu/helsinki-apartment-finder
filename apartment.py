@@ -1,6 +1,7 @@
 import plotly.graph_objects as go
 from dataclasses import dataclass, field
 from typing import List, Tuple
+from parameters import *
 
 
 @dataclass
@@ -15,10 +16,15 @@ class Parameter:
 
     def __post_init__(self):
         if self.range is not None and self.range[1] <= self.range[0]:
-            raise ValueError("Range is not valid")
+            raise ValueError("Parameter {} range {} is not valid".format(self.name, self.range))
 
         if self.range is not None and (self.value < self.range[0] or self.value > self.range[1]):
-            raise ValueError("Parameter {} value is not valid: value {} not in range {}".format(self.name, self.value, self.range) )
+            raise ValueError("Parameter {} value is not valid: value {} not in range {}".format(
+                self.name, self.value, self.range))
+
+        if self.weight > 1.0:
+            raise ValueError("Parameter {} weight is not valid: weight {} is not in range 0 to 1".format(
+                self.name, self.weight))
 
     def normalize(self, min_value, max_value):
         if self.range is not None:
@@ -40,47 +46,41 @@ K = 1000
 
 
 class Price(Parameter):
-    def __init__(self, value, is_increasing_better=False, unit="euro", name="price", range=(100*K, 400*K)):
+    def __init__(self, value, is_increasing_better=False, unit="euro", name="price", range=price_range):
         super().__init__(value, is_increasing_better, unit, name, range)
 
 
 class Area(Parameter):
-    def __init__(self, value, is_increasing_better=True, unit="msq", name="area", range=(50, 150)):
+    def __init__(self, value, is_increasing_better=True, unit="msq", name="area", range=area_range):
         super().__init__(value, is_increasing_better, unit, name, range)
 
 
 class Year(Parameter):
-    def __init__(self, value, is_increasing_better=True, unit="year", name="year", range=(1950, 2022)):
+    def __init__(self, value, is_increasing_better=True, unit="year", name="year", range=year_range):
         super().__init__(value, is_increasing_better, unit, name, range)
 
 
 class Vastike(Parameter):
-    def __init__(self, value, is_increasing_better=False, unit="euro", name="vastike", range=(10, 450)):
+    def __init__(self, value, is_increasing_better=False, unit="euro", name="vastike", range=vastike_range):
         super().__init__(value, is_increasing_better, unit, name, range)
 
 
 class Floor(Parameter):
-    def __init__(self, value, is_increasing_better=True, unit="", name="floor", range=(0, 10)):
+    def __init__(self, value, is_increasing_better=True, unit="", name="floor", range=floor_range):
         super().__init__(value, is_increasing_better, unit, name, range)
 
 
 class Rooms(Parameter):
-    def __init__(self, value, is_increasing_better=True, unit="", name="rooms", range=(1, 5)):
+    def __init__(self, value, is_increasing_better=True, unit="", name="rooms", range=rooms_range):
         super().__init__(value, is_increasing_better, unit, name, range)
 
 
 class Zone(Parameter):
-    def __init__(self, value: str, is_increasing_better=True, unit="", name="zone", range=(0, 1)):
+    def __init__(self, value: str, is_increasing_better=True, unit="", name="zone", range=zone_range):
         value = value.lower()
         numerical_value = 0
-        if(value == "matinkylä"):
-            numerical_value = 1
-        elif(value == "leppävaara"):
-            numerical_value = 1
-        elif(value == "tiistilä"):
-            numerical_value = 1
-        elif(value == "olari"):
-            numerical_value = 0.5
+        if(zone_weights.get(value) is not None):
+            numerical_value = zone_weights[value]
 
         super().__init__(numerical_value, is_increasing_better, unit, name, range)
 
@@ -126,14 +126,6 @@ class Apartment:
                                                                                                            self.zone.value)
 
 
-def normalizeParameters(parameters: List[Parameter]):
-    max_value = max(parameter.value for parameter in parameters)
-    min_value = min(parameter.value for parameter in parameters)
-
-    for parameter in parameters:
-        parameter.normalize(min_value, max_value)
-
-
 @dataclass
 class Apartments:
     apartments: List[Apartment] = None
@@ -144,15 +136,22 @@ class Apartments:
     def normalize(self):
         n_parameters = len(self.apartments[0].parameters)
         for i in range(n_parameters):
-            normalizeParameters([apartment.parameters[i] for apartment in self.apartments])
+            self.__normalizeParameters([apartment.parameters[i] for apartment in self.apartments])
 
-    def plot(self, n = 5):
-        self.rank()
+    def __normalizeParameters(self, parameters: List[Parameter]):
+        max_value = max(parameter.value for parameter in parameters)
+        min_value = min(parameter.value for parameter in parameters)
+
+        for parameter in parameters:
+            parameter.normalize(min_value, max_value)
+
+    def plot(self):
+        self.apartments.sort(key=lambda a: a.calculate_weighted_value(), reverse=True)
 
         categories = Apartment.categories
         fig = go.Figure()
         for i, a in enumerate(self.apartments):
-            if i > n - 1:
+            if i > number_of_apartments_to_plot - 1:
                 break
             fig.add_trace(go.Scatterpolar(
                 r=a.get_values(),
@@ -171,10 +170,10 @@ class Apartments:
 
         fig.show()
 
-    def rank(self, n=10):
+    def rank(self):
         self.apartments.sort(key=lambda a: a.calculate_weighted_value(), reverse=True)
         for i in range(len(self.apartments)):
-            if i > n - 1:
+            if i > number_of_apartments_to_rank - 1:
                 break
             print(f"{i+1}. Name: {self.apartments[i].name} Url: {self.apartments[i].url}")
             print(f"{self.apartments[i].calculate_weighted_value()}")

@@ -16,8 +16,12 @@ class TestParameter(unittest.TestCase):
         self.assertEqual(p.weight, 1.0)
         self.assertEqual(p.normalized_value, 0.0)
 
+    def test_Parameter_Throw_Errors(self):
         with pytest.raises(ValueError):
             p = Parameter(10, range=(100,10))
+
+        with pytest.raises(ValueError):
+            p = Parameter(0, range=(10,100))
 
     def test_Parameter_Constructor_CustomValues(self):
         p = Parameter(120*K, False, "euro", "price", (100*K, 400*K), 2.0)
@@ -38,3 +42,7 @@ class TestParameter(unittest.TestCase):
         price.normalize(150*K, 350*K)
         self.assertEqual(price.normalized_value, 1.0)
         self.assertEqual(price.calculate_weighted_value(), 1.0)
+
+        price.normalize(100*K, 200*K)
+        self.assertEqual(price.normalized_value, 0.5)
+        self.assertEqual(price.calculate_weighted_value(), 0.5)
