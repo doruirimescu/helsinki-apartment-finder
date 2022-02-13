@@ -1,5 +1,5 @@
 import plotly.graph_objects as go
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Tuple
 
 
@@ -17,6 +17,9 @@ class Parameter:
         if self.range is not None and self.range[1] <= self.range[0]:
             raise ValueError("Range is not valid")
 
+        if self.range is not None and (self.value < self.range[0] or self.value > self.range[1]):
+            raise ValueError("Parameter {} value is not valid: value {} not in range {}".format(self.name, self.value, self.range) )
+
     def normalize(self, min_value, max_value):
         if self.range is not None:
             min_value = self.range[0]
@@ -33,7 +36,7 @@ class Parameter:
         return round(self.normalized_value * self.weight, 2)
 
 
-K = 100000
+K = 1000
 
 
 class Price(Parameter):
@@ -42,7 +45,7 @@ class Price(Parameter):
 
 
 class Area(Parameter):
-    def __init__(self, value, is_increasing_better=True, unit="msq", name="area", range=(50, 100)):
+    def __init__(self, value, is_increasing_better=True, unit="msq", name="area", range=(50, 150)):
         super().__init__(value, is_increasing_better, unit, name, range)
 
 
@@ -86,15 +89,15 @@ class Zone(Parameter):
 class Apartment:
     categories = ["price", "area", "year", "vastike", "floor", "rooms", "zone"]
 
-    name: str = ""
+    name: str
 
-    price: Price = Price(0)
-    area: Area = Area(0)
-    year: Year = Year(0)
-    vastike: Vastike = Vastike(0)
-    floor: Floor = Floor(1)
-    rooms: Rooms = Rooms(0)
-    zone: Zone = None
+    price: Price
+    area: Area
+    year: Year
+    vastike: Vastike
+    floor: Floor
+    rooms: Rooms
+    zone: Zone
 
     url: str = ""
 

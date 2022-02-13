@@ -131,10 +131,12 @@ for url_number, url in enumerate(apartment_urls):
 
     except Exception as e:
         print(e)
-
-    appartment = Apartment(name=address, price=Price(price), area=Area(area), year=Year(
-        year), vastike=Vastike(vastike), floor=Floor(floor), rooms=Rooms(rooms), zone=Zone(zone), url=url)
-    apartment_list.append(appartment)
+    try:
+        appartment = Apartment(name=address, price=Price(price), area=Area(area), year=Year(
+            year), vastike=Vastike(vastike), floor=Floor(floor), rooms=Rooms(rooms), zone=Zone(zone), url=url)
+        apartment_list.append(appartment)
+    except Exception as e:
+        print("Will not create apartment: ", address, " due to exception : ", e)
 
 for a in apartment_list:
     print(a)
