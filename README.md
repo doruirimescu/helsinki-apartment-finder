@@ -12,9 +12,11 @@ The top candidate apartments can be plotted on a radar chart:
 The top candidate apartments are sorted based on their ranks:
 ![Selection_105](https://user-images.githubusercontent.com/7363000/153774865-5f4c42e4-cd12-469b-87cf-67b1444734ce.png)
 
-Before running: install [chromedriver](https://chromedriver.chromium.org/downloads)
+**Before running:** 
+* Install [chromedriver](https://chromedriver.chromium.org/downloads)
+* Configure [parameters](https://github.com/doruirimescu/helsinki-apartment-finder/blob/master/parameters.py)
 
-To run:
+**Running:**
 ```python3 scraper.py```
 
 Inspired from: https://github.com/jarvijaakko/Apartment_hunting
