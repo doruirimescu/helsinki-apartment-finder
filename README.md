@@ -2,7 +2,7 @@
 
 # A python framework for apartment finding in Helsinki
 
-**Selects desired apartments, normalizes their parameters based on given ranges, classifies them based on weighted sum of parameters.**
+**Selects desired apartments, normalizes their parameters based on given [ranges](https://github.com/doruirimescu/helsinki-apartment-finder/blob/8abe2a75ad1df3cc9058ebffed8f2147758115aa/parameters.py#L10), classifies them based on [weighted sum](https://github.com/doruirimescu/helsinki-apartment-finder/blob/8abe2a75ad1df3cc9058ebffed8f2147758115aa/parameters.py#L19) of apartment [parameters](https://github.com/doruirimescu/helsinki-apartment-finder/blob/8abe2a75ad1df3cc9058ebffed8f2147758115aa/apartment.py#L64).**
 
 With this tool, you can scrape apartment information from [oikotie asunnot](https://asunnot.oikotie.fi/).
 
