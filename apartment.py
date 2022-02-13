@@ -157,6 +157,7 @@ class Apartments:
                 r=a.get_values(),
                 theta=categories,
                 fill='toself',
+                hoveron='points+fills',
                 name=a.name
             ))
 
@@ -175,6 +176,9 @@ class Apartments:
         for i in range(len(self.apartments)):
             if i > number_of_apartments_to_rank - 1:
                 break
-            print(f"{i+1}. Name: {self.apartments[i].name} Url: {self.apartments[i].url}")
-            print(f"{self.apartments[i].calculate_weighted_value()}")
-            print()
+            ranking = i + 1
+            score = self.apartments[i].calculate_weighted_value()
+            name = self.apartments[i].name
+            url = self.apartments[i].url
+            print("{}. Name: {}, Score: {:0.2f}, Url: {}".format(
+                ranking, name, score, url))
