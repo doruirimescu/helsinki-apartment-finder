@@ -6,6 +6,22 @@ from parameters import *
 
 @dataclass
 class Parameter:
+    """Parameter used for decision making
+
+    Args:
+        value (float):                  Value of the parameter
+        is_increasing_better (bool):    True if the parameter is better if its value is increasing
+        unit(str):                      Unit of the parameter
+        name (str):                     Name of the parameter
+        range (Tuple[int]):             Range of the parameter
+        weight (float):                 Weight of the parameter (0, 1)
+        normalized_value (float):       Normalized value of the parameter
+
+    Raises:
+        ValueError: range is not valid
+        ValueError: value is not valid
+        ValueError: weight is not valid
+    """
     value: int
     is_increasing_better: bool = True
     unit: str = ""
@@ -46,47 +62,56 @@ K = 1000
 
 
 class Price(Parameter):
-    def __init__(self, value, is_increasing_better=False, unit="euro", name="price", range=price_range):
-        super().__init__(value, is_increasing_better, unit, name, range)
+    """Parameter which reflects a price
+
+    Args:
+        value (float):                  Value of the parameter
+        weight (float):                 Weight of the parameter (0, 1)
+    """
+
+    def __init__(self, value, weight=1.0):
+        super().__init__(value, is_increasing_better=False, unit="euro", name="price", range=price_range, weight=weight)
 
 
 class Area(Parameter):
-    def __init__(self, value, is_increasing_better=True, unit="msq", name="area", range=area_range):
-        super().__init__(value, is_increasing_better, unit, name, range)
+    def __init__(self, value, weight=1.0):
+        super().__init__(value, is_increasing_better=True, unit="sqm", name="area", range=area_range, weight=weight)
 
 
 class Year(Parameter):
-    def __init__(self, value, is_increasing_better=True, unit="year", name="year", range=year_range):
-        super().__init__(value, is_increasing_better, unit, name, range)
+    def __init__(self, value, weight=1.0):
+        super().__init__(value, is_increasing_better=True, unit="year", name="year", range=year_range, weight=weight)
 
 
 class Vastike(Parameter):
-    def __init__(self, value, is_increasing_better=False, unit="euro", name="vastike", range=vastike_range):
-        super().__init__(value, is_increasing_better, unit, name, range)
+    def __init__(self, value, weight=1.0):
+        super().__init__(value, is_increasing_better=False, unit="euro", name="vastike", range=vastike_range, weight=weight)
 
 
 class Floor(Parameter):
-    def __init__(self, value, is_increasing_better=True, unit="", name="floor", range=floor_range):
-        super().__init__(value, is_increasing_better, unit, name, range)
+    def __init__(self, value, weight=1.0):
+        super().__init__(value, is_increasing_better=True, unit="", name="floor", range=floor_range, weight=weight)
 
 
 class Rooms(Parameter):
-    def __init__(self, value, is_increasing_better=True, unit="", name="rooms", range=rooms_range):
-        super().__init__(value, is_increasing_better, unit, name, range)
+    def __init__(self, value, weight=1.0):
+        super().__init__(value, is_increasing_better=True, unit="", name="rooms", range=rooms_range, weight=weight)
 
 
 class Zone(Parameter):
-    def __init__(self, value: str, is_increasing_better=True, unit="", name="zone", range=zone_range):
+    def __init__(self, value: str):
         value = value.lower()
         numerical_value = 0
         if(zone_weights.get(value) is not None):
             numerical_value = zone_weights[value]
 
-        super().__init__(numerical_value, is_increasing_better, unit, name, range)
+        super().__init__(numerical_value, is_increasing_better=True, unit="", name="zone", range=zone_range)
 
 
 @dataclass
 class Apartment:
+    """Apartment class which stores all relevant parameters for an apartment
+    """
     categories = ["price", "area", "year", "vastike", "floor", "rooms", "zone"]
 
     name: str
