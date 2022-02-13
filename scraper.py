@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from parameters import locations_url, price_weight, area_weight, year_weight, vastike_weight, floor_weight, rooms_weight
+from configuration_parameters import locations_url, price_weight, area_weight, year_weight, vastike_weight, floor_weight, rooms_weight
 
 # Import Apartment object
 from apartment import Apartment, Apartments, Price, Area, Year, Vastike, Floor, Rooms, Zone

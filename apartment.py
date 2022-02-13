@@ -1,7 +1,7 @@
 import plotly.graph_objects as go
 from dataclasses import dataclass, field
 from typing import List, Tuple
-from parameters import *
+from configuration_parameters import *
 
 
 @dataclass
